@@ -31,14 +31,14 @@ launch: $(OUTPUT)
 $(OUTPUT): $(OBJECT)
 	$(CXX) $(WARNINGS) $(DEBUG_MODE) $^ -o $(OUTPUT)
 
-$(AKINATOR_DIR)/main.cpp:
-	$(CXX) -c $(AKINATOR_DIR)/main.cpp
+main.o: $(AKINATOR_DIR)/main.cpp
+	$(CXX) -c $^
 
-$(AKINATOR_DIR)/akinator.cpp:
-	$(CXX) -c $(AKINATOR_DIR)/akinator.cpp 
+akinator.o: $(AKINATOR_DIR)/akinator.cpp 
+	$(CXX) -c $^
 
-$(TREE_DIR)/tree.cpp:
-	$(CXX) -c $(TREE_DIR)/tree.cpp
+tree.o: $(TREE_DIR)/tree.cpp
+	$(CXX) -c $^
 
 clean:
 	rm -f *.o *.a $(OUTPUT)
