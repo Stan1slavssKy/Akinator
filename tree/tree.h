@@ -1,11 +1,7 @@
 #ifndef TREE_INCLUDED
 #define TREE_INCLUDED
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <assert.h>
+#include "../libs.h"
 
 //===================================================================================
 
@@ -16,21 +12,20 @@ struct tree_node
     struct tree_node *right = nullptr;
 };
 
-//===================================================================================
-
-
-//===================================================================================
-
-#include "akinator.h"
+struct akinator_tree
+{
+    tree_node* root = nullptr;
+    int game_mode   = 0;
+};
 
 //===================================================================================
 
 void tree_construct (tree_node* tree);
-void node_destruct  (tree_node* object);
-void tree_destuct   (tree_node* object, tree_node* tree, akinator* aktr);
+void node_destruct  (tree_node* current_node);
+void tree_destuct   (tree_node* current_node);
 
-tree_node* add_left_child (tree_node* object, tree_node* tree, akinator* aktr);
-tree_node* add_left_child (tree_node* object, tree_node* tree, akinator* aktr);
+tree_node* add_left_child  (tree_node* current_node, tree_node* tree, akinator_tree* aktr);
+tree_node* add_right_child (tree_node* current_node, tree_node* tree, akinator_tree* aktr);
 
 //===================================================================================
 
