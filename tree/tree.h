@@ -1,7 +1,7 @@
 #ifndef TREE_INCLUDED
 #define TREE_INCLUDED
 
-#include "../libs.h"
+#include "../include.h"
 
 //===================================================================================
 
@@ -20,12 +20,12 @@ struct akinator_tree
 
 //===================================================================================
 
-void tree_construct (tree_node* tree);
-void node_destruct  (tree_node* current_node);
-void tree_destuct   (tree_node* current_node);
+void tree_construct (tree_node* cur_tree);
+void node_destruct  (tree_node* cur_tree);
+void tree_destuct   (tree_node* cur_tree);
 
-tree_node* add_left_child  (tree_node* current_node, tree_node* tree, akinator_tree* aktr);
-tree_node* add_right_child (tree_node* current_node, tree_node* tree, akinator_tree* aktr);
+tree_node* create_left  (tree_node* cur_tree, akinator_tree* aktr);
+tree_node* create_right (tree_node* cur_tree, akinator_tree* aktr);
 
 //===================================================================================
 

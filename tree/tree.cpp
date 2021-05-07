@@ -2,49 +2,36 @@
 
 //===================================================================================
 
-void tree_construct (tree_node* tree)
+tree_node* create_left (tree_node* cur_node, akinator_tree* aktr)
 {
+    assert (aktr);
 
-}
+    tree_node* left_ptr = (tree_node*) calloc (1, sizeof (tree_node));
+    assert (left_ptr);
 
-//===================================================================================
-// Вход:      указатель на текущую структуру, структура дерева, структура акинатора
-// О функции: проверка на то ноль ли текущий указатель, если нет, 
-// то добавляем левого ребенка, если да - то присваеваем указатею  
-// на текущий объект указатель на ребенка
-// Выход:     указатель на левого ребенка
-
-tree_node* add_left_child (tree_node* current_node, tree_node* tree, akinator_tree* aktr)
-{
-    tree_node* child_ptr = (tree_node*) calloc (1, sizeof (tree_node));
-    assert (child_ptr);
-
-    if (current_node == nullptr)
-        aktr -> root = child_ptr;
+    if (cur_node == nullptr)
+        aktr -> root = left_ptr;
     else 
-        current_node -> left = child_ptr;
+        cur_node -> left = left_ptr;
     
-    return child_ptr;
+    return left_ptr;
 }
 
 //===================================================================================
-// Вход:      указатель на текущую структуру, структура дерева, структура акинатора
-// О функции: проверка на то ноль ли текущий указатель, если нет, 
-// то добавляем левого ребенка, если да - то присваеваем указатею  
-// на текущий объект указатель на ребенка
-// Выход:     указатель на левого ребенка
 
-tree_node* add_right_child (tree_node* current_node, tree_node* tree, akinator_tree* aktr)
+tree_node* create_right (tree_node* cur_node, akinator_tree* aktr)
 {
-    tree_node* child_ptr = (tree_node*) calloc (1, sizeof (tree_node));
-    assert (child_ptr);
+    assert (aktr);
 
-    if (current_node == nullptr)
-        aktr -> root = child_ptr;
+    tree_node* right_ptr = (tree_node*) calloc (1, sizeof (tree_node));
+    assert (right_ptr);
+
+    if (cur_node == nullptr)
+        aktr -> root = right_ptr;
     else 
-        current_node -> right = child_ptr;
+        cur_node -> right = right_ptr;
 
-    return child_ptr;
+    return right_ptr;
 }
 
 //===================================================================================
@@ -70,41 +57,32 @@ void tree_fill_from_file ()
 
 //===================================================================================
 
-// Вход:      указатель на структуру, начиная с которой нужно удалить узлы
-// О функции: освобождает узлы
-// Выход:     нет
-
-void node_destruct (tree_node* current_node)
+void node_destruct (tree_node* cur_node)
 {
-    if (current_node == nullptr)
+    if (cur_node == nullptr)
         return;
 
-    node_destruct (current_node -> left);
-    node_destruct (current_node -> right);
+    node_destruct (cur_node -> left);
+    node_destruct (cur_node -> right);
 
-    free (current_node);
+    free (cur_node);
 }
 
 //===================================================================================
-// Вход:      указатель на структуру, начиная с которой нужно удалить узлы
-// О функции: освобождает узлы
-// Выход:     нет
 
-void tree_destuct (tree_node* current_node)
+void tree_destuct (tree_node* cur_node)
 {
-    if (current_node == nullptr)
-    {
+    if (cur_node == nullptr)
         return;
-    }
 
-    node_destruct (current_node -> left);
-    node_destruct (current_node -> right);
+    node_destruct (cur_node -> left);
+    node_destruct (cur_node -> right);
 
-    current_node -> left  = nullptr;
-    current_node -> right = nullptr;
+    cur_node -> left  = nullptr;
+    cur_node -> right = nullptr;
 
-    free (current_node);
-    current_node = nullptr;
+    free (cur_node);
+    cur_node = nullptr;
 }
 
 //===================================================================================
