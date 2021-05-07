@@ -1,14 +1,17 @@
 #include "akinator.h"
 #include "../tree/tree.h"
 
-int main ()
+int main (int argc, char** argv)
 {
-    tree_node tree      = {};  
-    akinator_tree aktr  = {};
-    
-    akinator_construct (&aktr, &tree);
+    text          base_info = {};
+    tree_node     tree      = {};  
+    akinator_tree aktr      = {};
 
-    tree_destuct (aktr.root);
-    // tree_construct (&tree);
+    char* file_name = console_input (argc, argv);
+    assert (file_name);
+    
+    akinator_construct (&aktr, &tree, file_name, &base_info);
+    akinator_destruct  (&aktr, &base_info);
+
     return 0;
 }

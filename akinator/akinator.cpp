@@ -2,24 +2,83 @@
 
 //===================================================================================
 
-void akinator_construct (akinator_tree* aktr, tree_node* tree)
+void akinator_construct (akinator_tree* aktr, tree_node* cur_node, char* file_name, text* base_info)
 {
-    add_left_child (nullptr, tree, aktr);
+    assert (aktr);
+    assert (base_info);
+    assert (file_name);
+
+    create_left (nullptr, aktr);
+    assert (aktr -> root);
+    cur_node = aktr -> root;
+
+    create_left  (cur_node, aktr);
+    create_right (cur_node, aktr);
+
+    input_inform (file_name, base_info);
     
-    add_left_child  (aktr -> root, tree, aktr);
-    add_right_child (aktr -> root, tree, aktr);
+    int idx = 0;
+    create_akinator_tree (aktr, cur_node, base_info, idx);
+   
+    akinator_init (aktr, cur_node);
+}
+
+//===================================================================================
+/*
+void base_analize (akinator_tree* aktr, tree_node* cur_node, text* base_info)
+{
+    assert (aktr);
+    assert (aktr -> root);
+    assert (base_info);
+    assert (base_info -> file_buffer);
+    assert (cur_node);
+
+    int idx = 0;
+
+    create_akinator_tree (aktr, cur_node, base_info, idx);
+}
+*/
+//===================================================================================
+
+void create_akinator_tree (akinator_tree* aktr, tree_node* cur_node, text* base_info, int idx)
+{
+    assert (aktr);
+    assert (aktr -> root);
+    assert (base_info);
+    assert (base_info -> file_buffer);
+    assert (cur_node);
+
+    char* buffer = base_info -> file_buffer;
+
+    while (buffer[idx] != '{')
+        idx++;
     
-    aktr -> root -> data          = "Animal";
-    aktr -> root -> left  -> data = "Human";
-    aktr -> root -> right -> data = "Cat";
+    if (buffer[idx] == '{')
+    {
+        cur_node -> data = buffer + idx;
+
+        create_left  (cur_node, aktr);
+        create_right (cur_node, aktr);
+    }
+
+    while (buffer[idx] != '{' || buffer[idx] != '}')
+        idx++;
     
-    akinator_init (aktr, tree);
+    if (buffer[idx] == '}')
+        return;
+
+    create_akinator_tree (aktr, cur_node -> left,  base_info, idx);
+    create_akinator_tree (aktr, cur_node -> right, base_info, idx);
 }
 
 //===================================================================================
 
-void akinator_init (akinator_tree* aktr, tree_node* tree)
+void akinator_init (akinator_tree* aktr, tree_node* cur_node)
 {
+    assert (aktr);
+    assert (aktr -> root);
+    assert (cur_node);
+
     printf ("Hi, I'm Akinator, please choise game mode:\n\t\t\t  1) guessing game\n");
     scanf  ("%d", &(aktr -> game_mode));
 
@@ -29,7 +88,7 @@ void akinator_init (akinator_tree* aktr, tree_node* tree)
     {
         case 1:
             printf ("You choice guessing game, lets start!\n");
-            akinator_mode_1 (aktr, tree);
+            akinator_mode_1 (aktr, cur_node);
             break;
         
         default:
@@ -40,31 +99,60 @@ void akinator_init (akinator_tree* aktr, tree_node* tree)
 
 //===================================================================================
 
-void akinator_mode_1 (akinator_tree* aktr, tree_node* tree)
+void akinator_mode_1 (akinator_tree* aktr, tree_node* cur_node)
 {
-    printf ("Is it %s?\n", aktr -> root -> data);
-   
+    assert (aktr);
+    assert (aktr -> root);
+    assert (cur_node);
+
+    while (true)
+    {
+        if (cur_node -> left == nullptr && cur_node -> right == nullptr)
+        {
+            printf ("I don't know what you're thinking.\n");
+            break;
+        }
+
+        printf ("Is it %s?\n", cur_node -> data);
+        cur_node = get_answer (aktr, cur_node);
+    }
+}
+
+//===================================================================================
+
+tree_node* get_answer (akinator_tree* aktr, tree_node* cur_node)
+{
+    assert (aktr);
+    assert (aktr -> root);
+    assert (cur_node);
+
     char answer[3] = {};
 
     scanf ("%s", answer);
 
     if (!strcmp (answer, "yes"))
-    {
-        printf ("Is it %s?\n", aktr -> root -> right -> data);    
-    }
+        cur_node = cur_node -> right;  
     
     else if (!strcmp (answer, "no"))
-    {
-        printf ("Is it %s?\n", aktr -> root -> left  -> data);    
-    }
+        cur_node = cur_node -> left;  
 
     else 
         printf ("Sorry you didn't enter yes or no.\n");
+
+    return cur_node;
 }
 
 //===================================================================================
 
-void get_answer ()
+void akinator_destruct  (akinator_tree* aktr, text* base_info)
 {
+    assert (aktr);
+    assert (aktr -> root);
+    assert (base_info);
+    assert (base_info -> file_buffer);
 
+    tree_destuct (aktr -> root);
+    free (base_info -> file_buffer);
 }
+
+//===================================================================================
