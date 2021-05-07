@@ -1,0 +1,21 @@
+{
+Is it animal?
+        {
+        Is it a cat?
+                {
+                Poltorashka
+                }
+                {
+                Hatiko
+                }
+        }
+        {
+        Is it a human?
+                {
+                Ovshinkin
+                }
+                {
+                Morgernshtern
+                }
+        }
+}

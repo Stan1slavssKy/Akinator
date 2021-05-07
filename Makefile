@@ -15,15 +15,16 @@ VALGRIND_FLAGS = --leak-check=full
 
 AKINATOR_DIR = ./akinator
 TREE_DIR	 = ./tree
+LIBS_DIR     = ./libs
 
-SOURCE = $(AKINATOR_DIR)/main.cpp $(AKINATOR_DIR)/akinator.cpp $(TREE_DIR)/tree.cpp
+SOURCE = $(AKINATOR_DIR)/main.cpp $(AKINATOR_DIR)/akinator.cpp $(TREE_DIR)/tree.cpp $(LIBS_DIR)/Onegin.cpp
 OBJECT = $(SOURCE:.cpp=.o)
 OUTPUT = Akinator
 
 default: valgrind
 
 valgrind: $(OUTPUT)
-	valgrind $(VALGRIND_FLAGS) ./$(OUTPUT)
+	valgrind $(VALGRIND_FLAGS) ./$(OUTPUT) "base"
 
 launch: $(OUTPUT)
 	./$(OUTPUT)
@@ -38,6 +39,9 @@ akinator.o: $(AKINATOR_DIR)/akinator.cpp
 	$(CXX) -c $^
 
 tree.o: $(TREE_DIR)/tree.cpp
+	$(CXX) -c $^
+
+Onegin.o: $(LIBS_DIR)/Onegin.cpp
 	$(CXX) -c $^
 
 clean:
