@@ -8,45 +8,52 @@ void akinator_construct (akinator_tree* aktr, tree_node* cur_node, char* file_na
     assert (base_info);
     assert (file_name);
 
-    create_left (nullptr, aktr);
-    assert (aktr -> root);
-    cur_node = aktr -> root;
-
-    create_left  (cur_node, aktr);
-    create_right (cur_node, aktr);
-
     input_inform (file_name, base_info);
-    
-    int idx = 0;
-    create_akinator_tree (aktr, cur_node, base_info, idx);
+    assert (base_info -> file_buffer);
    
-    akinator_init (aktr, cur_node);
+    base_analize  (aktr, cur_node, base_info);
+   // akinator_init (aktr, cur_node);
 }
 
 //===================================================================================
-/*
+
 void base_analize (akinator_tree* aktr, tree_node* cur_node, text* base_info)
 {
     assert (aktr);
-    assert (aktr -> root);
     assert (base_info);
     assert (base_info -> file_buffer);
-    assert (cur_node);
+    
+    char* buffer = base_info -> file_buffer;
+    int   idx    = 0;
+    
+    while (buffer[idx] != '{')
+        idx++;
 
-    int idx = 0;
+    if (aktr -> root == nullptr)
+    {
+        cur_node = create_left (nullptr, aktr);    
+        assert (cur_node);
 
-    create_akinator_tree (aktr, cur_node, base_info, idx);
+        cur_node -> data = buffer + idx + 2;
+    }
+
+    while (buffer[idx] != '{' || buffer[idx] != '}' || buffer[idx] != '\0')
+        idx++;
+
+    if (buffer[idx] == '}' || buffer[idx] == '\0')
+        return;
+
+    create_akinator_tree (aktr, cur_node -> right, base_info, idx);
+    create_akinator_tree (aktr, cur_node -> left,  base_info, idx);
 }
-*/
+
 //===================================================================================
 
 void create_akinator_tree (akinator_tree* aktr, tree_node* cur_node, text* base_info, int idx)
 {
     assert (aktr);
-    assert (aktr -> root);
     assert (base_info);
     assert (base_info -> file_buffer);
-    assert (cur_node);
 
     char* buffer = base_info -> file_buffer;
 
@@ -55,10 +62,10 @@ void create_akinator_tree (akinator_tree* aktr, tree_node* cur_node, text* base_
     
     if (buffer[idx] == '{')
     {
-        cur_node -> data = buffer + idx;
+        cur_node -> data = buffer + idx + 2;  // пропуск { + пропуск \n
 
         create_left  (cur_node, aktr);
-        create_right (cur_node, aktr);
+        create_right (cur_node, aktr);   
     }
 
     while (buffer[idx] != '{' || buffer[idx] != '}')
@@ -67,8 +74,8 @@ void create_akinator_tree (akinator_tree* aktr, tree_node* cur_node, text* base_
     if (buffer[idx] == '}')
         return;
 
-    create_akinator_tree (aktr, cur_node -> left,  base_info, idx);
     create_akinator_tree (aktr, cur_node -> right, base_info, idx);
+    create_akinator_tree (aktr, cur_node -> left,  base_info, idx);
 }
 
 //===================================================================================
