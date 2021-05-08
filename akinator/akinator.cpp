@@ -10,7 +10,9 @@ void akinator_construct (akinator_tree* aktr, tree_node* cur_node, char* file_na
 
     input_inform (file_name, base_info);
     assert (base_info -> file_buffer);
-   
+    
+    placing_zeros (base_info);
+    
     base_analize  (aktr, cur_node, base_info);
    // akinator_init (aktr, cur_node);
 }
@@ -25,8 +27,13 @@ void base_analize (akinator_tree* aktr, tree_node* cur_node, text* base_info)
     
     char* buffer = base_info -> file_buffer;
     int   idx    = 0;
-    
+
     while (buffer[idx] != '{')
+        idx++;
+    
+    idx++;
+    
+    while (isspace(buffer[idx]))
         idx++;
 
     if (aktr -> root == nullptr)
@@ -34,15 +41,19 @@ void base_analize (akinator_tree* aktr, tree_node* cur_node, text* base_info)
         cur_node = create_left (nullptr, aktr);    
         assert (cur_node);
 
-        cur_node -> data = buffer + idx + 2;
+        cur_node -> data = buffer + idx;
+        printf ("slovo = %s\n", cur_node ->data);
     }
 
-    while (buffer[idx] != '{' || buffer[idx] != '}' || buffer[idx] != '\0')
+    while ((buffer[idx] != '{') && (buffer[idx] != '}'))
         idx++;
-
-    if (buffer[idx] == '}' || buffer[idx] == '\0')
+    
+    if (buffer[idx] == '}')
         return;
 
+    create_left  (cur_node, aktr);
+    create_right (cur_node, aktr);
+    
     create_akinator_tree (aktr, cur_node -> right, base_info, idx);
     create_akinator_tree (aktr, cur_node -> left,  base_info, idx);
 }
@@ -57,18 +68,24 @@ void create_akinator_tree (akinator_tree* aktr, tree_node* cur_node, text* base_
 
     char* buffer = base_info -> file_buffer;
 
+
     while (buffer[idx] != '{')
         idx++;
     
     if (buffer[idx] == '{')
     {
-        cur_node -> data = buffer + idx + 2;  // пропуск { + пропуск \n
+        idx++;
+
+        while (isspace(buffer[idx]))
+            idx++;
+
+        cur_node -> data = buffer + idx;
 
         create_left  (cur_node, aktr);
         create_right (cur_node, aktr);   
     }
 
-    while (buffer[idx] != '{' || buffer[idx] != '}')
+    while (buffer[idx] != '{' && buffer[idx] != '}')
         idx++;
     
     if (buffer[idx] == '}')
