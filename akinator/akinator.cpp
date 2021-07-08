@@ -12,50 +12,11 @@ void akinator_construct (akinator_tree* aktr, tree_node* cur_node, char* file_na
     assert (base_info -> file_buffer);
     
     placing_zeros (base_info);
-    
-    base_analize  (aktr, cur_node, base_info);
-   // akinator_init (aktr, cur_node);
-}
 
-//===================================================================================
+    int idx = 0;
 
-void base_analize (akinator_tree* aktr, tree_node* cur_node, text* base_info)
-{
-    assert (aktr);
-    assert (base_info);
-    assert (base_info -> file_buffer);
-    
-    char* buffer = base_info -> file_buffer;
-    int   idx    = 0;
-
-    while (buffer[idx] != '{')
-        idx++;
-    
-    idx++;
-    
-    while (isspace(buffer[idx]))
-        idx++;
-
-    if (aktr -> root == nullptr)
-    {
-        cur_node = create_left (nullptr, aktr);    
-        assert (cur_node);
-
-        cur_node -> data = buffer + idx;
-        printf ("slovo = %s\n", cur_node ->data);
-    }
-
-    while ((buffer[idx] != '{') && (buffer[idx] != '}'))
-        idx++;
-    
-    if (buffer[idx] == '}')
-        return;
-
-    create_left  (cur_node, aktr);
-    create_right (cur_node, aktr);
-    
-    create_akinator_tree (aktr, cur_node -> right, base_info, idx);
-    create_akinator_tree (aktr, cur_node -> left,  base_info, idx);
+    create_akinator_tree (aktr, cur_node, base_info, idx);
+    akinator_init (aktr, aktr -> root);
 }
 
 //===================================================================================
@@ -68,31 +29,42 @@ void create_akinator_tree (akinator_tree* aktr, tree_node* cur_node, text* base_
 
     char* buffer = base_info -> file_buffer;
 
-
-    while (buffer[idx] != '{')
-        idx++;
-    
-    if (buffer[idx] == '{')
+    while (true)
     {
-        idx++;
+        if (buffer[idx] == '{' && buffer[idx])
+        {
+            while (isspace(buffer[idx]))
+                idx++;
 
-        while (isspace(buffer[idx]))
-            idx++;
+            if (aktr -> root == nullptr)
+            {
+                printf ("Im first\n");
+                cur_node = create_node (nullptr, aktr);    
+                assert (cur_node);
 
-        cur_node -> data = buffer + idx;
+                cur_node -> data = buffer + idx;
+                printf ("slovo = %s\n", cur_node -> data);
 
-        create_left  (cur_node, aktr);
-        create_right (cur_node, aktr);   
+                create_akinator_tree (aktr, cur_node -> right, base_info, idx);
+                create_akinator_tree (aktr, cur_node -> left,  base_info, idx); 
+                 printf ("Im last\n");  
+            }
+            else 
+            {
+                cur_node -> right = create_node (cur_node, aktr);
+                cur_node -> left  = create_node (cur_node, aktr);  
+
+                cur_node -> data = buffer + idx;
+                printf ("slovo = %s\n", cur_node -> data);
+
+                create_akinator_tree (aktr, cur_node -> right, base_info, idx);
+                create_akinator_tree (aktr, cur_node -> left,  base_info, idx);   
+            }
+        }
+
+        if (buffer[idx] == '}')
+            return;
     }
-
-    while (buffer[idx] != '{' && buffer[idx] != '}')
-        idx++;
-    
-    if (buffer[idx] == '}')
-        return;
-
-    create_akinator_tree (aktr, cur_node -> right, base_info, idx);
-    create_akinator_tree (aktr, cur_node -> left,  base_info, idx);
 }
 
 //===================================================================================
