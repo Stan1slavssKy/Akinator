@@ -2,7 +2,7 @@
 
 //===================================================================================
 
-void akinator_construct (akinator_tree* aktr, tree_node* cur_node, char* file_name, text* base_info)
+void akinator_construct (akinator_tree* aktr, char* file_name, text* base_info)
 {
     assert (aktr);
     assert (base_info);
@@ -11,17 +11,17 @@ void akinator_construct (akinator_tree* aktr, tree_node* cur_node, char* file_na
     input_inform (file_name, base_info);
     assert (base_info -> file_buffer);
     
-    placing_zeros (base_info);
+ // это хуйня  placing_zeros (base_info);
 
     int idx = 0;
 
-    create_akinator_tree (aktr, cur_node, base_info, idx);
+    create_akinator_tree (aktr, base_info, idx);
     akinator_init (aktr, aktr -> root);
 }
 
 //===================================================================================
 
-void create_akinator_tree (akinator_tree* aktr, tree_node* cur_node, text* base_info, int idx)
+void create_akinator_tree (akinator_tree* aktr, text* base_info, int idx)
 {
     assert (aktr);
     assert (base_info);
@@ -29,42 +29,102 @@ void create_akinator_tree (akinator_tree* aktr, tree_node* cur_node, text* base_
 
     char* buffer = base_info -> file_buffer;
 
+    if (aktr -> root == nullptr) 
+    {
+        while (isspace(buffer[idx])) idx++;
+
+        if (buffer[idx] == '{')
+        {
+            aktr -> root = create_akinator_node (buffer, idx);    
+        }
+        else 
+        {
+            printf ("Error, %d", __LINE__);
+        }
+    }
+
+    else
+        printf ("Error, second create of aktr tree, %d", __LINE__);
+}   
+
+//===================================================================================
+
+tree_node* create_akinator_node (char* buffer, int idx)
+{
+    assert (buffer);
+
+    if (buffer[idx] == '{')
+    {    
+        idx++;
+        
+        while (isspace(buffer[idx]))
+            idx++;
+    }
+    else 
+    {
+        printf ("Error, %d", __LINE__);
+    }
+
+    if (buffer[idx] == '}')
+    {
+        return nullptr;
+    }
+
+    tree_node* cur_node = (tree_node*) calloc (1, sizeof (tree_node));
+    assert (cur_node);
+
+    char* word_ptr = create_word (buffer, idx);
+    assert (word_ptr);
+
+    if (buffer[idx] == '{')
+    {
+        cur_node -> right = create_akinator_node (buffer, idx);
+    }// ТУТ МОЖЕТ СБИВАТЬСЯ ИНДЕКС ПОЖТОМУ ДВА РАЗА
+
+    while (isspace(buffer[idx]))
+        idx++;
+
+    if (buffer[idx] == '{')
+    {
+        cur_node -> left  = create_akinator_node (buffer, idx);
+    }
+
+    while (isspace(buffer[idx]))
+        idx++;
+
+    
+    if (buffer[idx] == '}')
+    {
+        idx++;
+        return cur_node;
+    }        //У ифов сделать элсы
+}
+
+//===================================================================================
+
+char* create_word (char* buffer, int idx)
+{
+    assert (buffer);
+
+    char* word_ptr = buffer + idx;
+
     while (true)
     {
-        if (buffer[idx] == '{' && buffer[idx])
+        if (buffer[idx] == '\n')
         {
-            while (isspace(buffer[idx]))
-                idx++;
-
-            if (aktr -> root == nullptr)
-            {
-                printf ("Im first\n");
-                cur_node = create_node (nullptr, aktr);    
-                assert (cur_node);
-
-                cur_node -> data = buffer + idx;
-                printf ("slovo = %s\n", cur_node -> data);
-
-                create_akinator_tree (aktr, cur_node -> right, base_info, idx);
-                create_akinator_tree (aktr, cur_node -> left,  base_info, idx); 
-                 printf ("Im last\n");  
-            }
-            else 
-            {
-                cur_node -> right = create_node (cur_node, aktr);
-                cur_node -> left  = create_node (cur_node, aktr);  
-
-                cur_node -> data = buffer + idx;
-                printf ("slovo = %s\n", cur_node -> data);
-
-                create_akinator_tree (aktr, cur_node -> right, base_info, idx);
-                create_akinator_tree (aktr, cur_node -> left,  base_info, idx);   
-            }
+            buffer[idx] =  '\0';
+            idx++;
+            break;
         }
-
-        if (buffer[idx] == '}')
-            return;
+        idx++;
     }
+
+    printf ("slovo = %s\n", word_ptr);
+    
+    while (isspace(buffer[idx]))
+        idx++;
+
+    return word_ptr;      
 }
 
 //===================================================================================
