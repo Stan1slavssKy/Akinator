@@ -80,6 +80,19 @@ void free_memory (struct text* text_info)
 
 //------------------------------------------------------------------------------------------------
 
+void placing_zeros (text* base_info)
+{
+    char* buffer = base_info -> file_buffer;
+
+    for (int i = 0; buffer[i] != '\0'; i++)
+    {
+        if (buffer[i] == '\n')
+            buffer[i] = '\0';
+    }
+}
+
+//------------------------------------------------------------------------------------------------
+
 char* console_input (int argc, char* argv[])
 {
     char* file_name = nullptr;
@@ -99,6 +112,50 @@ char* console_input (int argc, char* argv[])
     
     printf ("Error: to few or too many arguments.\n");
     return nullptr;
+}
+
+//------------------------------------------------------------------------------------------------
+
+int skip_spaces (text* text_info)
+{
+    assert (text_info);
+    assert (text_info -> file_buffer);
+
+    char* new_buffer = (char*) calloc (text_info -> size_of_file, sizeof (char));
+    char* symbol     = text_info -> file_buffer;
+     
+    int   idx     = 0;
+    int   new_idx = 0;     
+    int   space_counter = 0;
+
+    while (symbol[idx] != '\0')
+    {
+        if (isspace (symbol[idx]))
+        {
+            while (isspace (symbol[idx]))
+                idx++;
+
+            new_buffer[new_idx++] = ' ';
+            new_buffer[new_idx++] = symbol[idx++];
+            
+            space_counter++;
+        }
+
+        else    
+            new_buffer[new_idx++] = symbol[idx++];
+    }
+
+    new_buffer[new_idx] = '\0';
+
+    printf ("[%s]\n", new_buffer);
+
+    free (text_info -> file_buffer);
+    text_info -> file_buffer = nullptr;
+
+    text_info -> file_buffer = new_buffer;
+    
+    space_counter--;
+    return space_counter;
 }
 
 //------------------------------------------------------------------------------------------------

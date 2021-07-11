@@ -14,9 +14,9 @@
 
 struct text 
 {
-    int  size_of_file   = 0;
-    char* file_buffer   = nullptr;
-    struct str* strings = nullptr;
+    int  size_of_file;
+    char* file_buffer;
+    struct str* strings;
 };
 //сделать флаг который будет выбирать структуру по надобности
 
@@ -38,6 +38,8 @@ void input_inform  (char* file_name, struct text* text_info);
 void lexemes_parsing  (struct text* text_info);
 void place_pointers   (struct text* text_info);
 void free_memory      (struct text* text_info);
+void placing_zeros    (struct text* text_info);
+int skip_spaces       (text* text_info);
 
 //------------------------------------------------------------------------------------------------
 
