@@ -2,61 +2,6 @@
 
 //===================================================================================
 
-tree_node* create_left (tree_node* cur_node, akinator_tree* aktr)
-{
-    assert (aktr);
-
-    tree_node* left_ptr = (tree_node*) calloc (1, sizeof (tree_node));
-    assert (left_ptr);
-
-    if (cur_node == nullptr)
-        aktr -> root = left_ptr;
-    else 
-        cur_node -> left = left_ptr;
-    
-    return left_ptr;
-}
-
-//===================================================================================
-
-tree_node* create_right (tree_node* cur_node, akinator_tree* aktr)
-{
-    assert (aktr);
-
-    tree_node* right_ptr = (tree_node*) calloc (1, sizeof (tree_node));
-    assert (right_ptr);
-
-    if (cur_node == nullptr)
-        aktr -> root = right_ptr;
-    else 
-        cur_node -> right = right_ptr;
-
-    return right_ptr;
-}
-
-//===================================================================================
-
-void tree_dump ()
-{
-
-}
-
-//===================================================================================
-
-void print_node ()
-{
-
-}
-
-//===================================================================================
-
-void tree_fill_from_file ()
-{
-
-}
-
-//===================================================================================
-
 void node_destruct (tree_node* cur_node)
 {
     if (cur_node == nullptr)
