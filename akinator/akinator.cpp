@@ -2,32 +2,33 @@
 
 //===================================================================================
 
-void akinator_construct (akinator_tree* aktr, char* file_name, text* base_info)
+void akinator_construct (akinator_tree* aktr, char* file_name)
 {
     assert (aktr);
-    assert (base_info);
     assert (file_name);
 
-    input_inform (file_name, base_info);
-    assert (base_info -> file_buffer);
-    
- // это хуйня  placing_zeros (base_info);
+    aktr -> base_info = (text*) calloc (1, sizeof(text*));
+    assert (aktr -> base_info);
+
+    input_inform (file_name, aktr -> base_info);
+    assert ((aktr -> base_info) -> file_buffer);
 
     int idx = 0;
 
-    create_akinator_tree (aktr, base_info, idx);
-    akinator_init (aktr, aktr -> root);
+    create_akinator_tree (aktr, idx);
+    akinator_graph (aktr);
+  //  akinator_menu (aktr);
 }
 
 //===================================================================================
 
-void create_akinator_tree (akinator_tree* aktr, text* base_info, int idx)
+void create_akinator_tree (akinator_tree* aktr, int idx)
 {
     assert (aktr);
-    assert (base_info);
-    assert (base_info -> file_buffer);
+    assert (aktr -> base_info);
+    assert ((aktr -> base_info) -> file_buffer);
 
-    char* buffer = base_info -> file_buffer;
+    char* buffer = (aktr -> base_info) -> file_buffer;
 
     if (aktr -> root == nullptr) 
     {
@@ -49,7 +50,7 @@ void create_akinator_tree (akinator_tree* aktr, text* base_info, int idx)
 
 //===================================================================================
 
-tree_node* create_akinator_node (char* buffer, int idx)
+tree_node* create_akinator_node (char* buffer, int& idx)
 {
     assert (buffer);
 
@@ -73,13 +74,13 @@ tree_node* create_akinator_node (char* buffer, int idx)
     tree_node* cur_node = (tree_node*) calloc (1, sizeof (tree_node));
     assert (cur_node);
 
-    char* word_ptr = create_word (buffer, idx);
+    char* word_ptr = create_word (buffer, cur_node, idx);
     assert (word_ptr);
 
     if (buffer[idx] == '{')
     {
         cur_node -> right = create_akinator_node (buffer, idx);
-    }// ТУТ МОЖЕТ СБИВАТЬСЯ ИНДЕКС ПОЖТОМУ ДВА РАЗА
+    }
 
     while (isspace(buffer[idx]))
         idx++;
@@ -97,21 +98,23 @@ tree_node* create_akinator_node (char* buffer, int idx)
     {
         idx++;
         return cur_node;
-    }        //У ифов сделать элсы
+    }   
 }
 
 //===================================================================================
 
-char* create_word (char* buffer, int idx)
+char* create_word (char* buffer, tree_node* cur_node, int &idx)
 {
     assert (buffer);
 
     char* word_ptr = buffer + idx;
+   
+    cur_node -> data = word_ptr;
 
     while (true)
     {
         if (buffer[idx] == '\n')
-        {
+        {   
             buffer[idx] =  '\0';
             idx++;
             break;
@@ -122,29 +125,28 @@ char* create_word (char* buffer, int idx)
     printf ("slovo = %s\n", word_ptr);
     
     while (isspace(buffer[idx]))
-        idx++;
+        idx++;    
 
     return word_ptr;      
 }
 
 //===================================================================================
 
-void akinator_init (akinator_tree* aktr, tree_node* cur_node)
+void akinator_menu (akinator_tree* aktr)
 {
     assert (aktr);
     assert (aktr -> root);
-    assert (cur_node);
 
     printf ("Hi, I'm Akinator, please choise game mode:\n\t\t\t  1) guessing game\n");
     scanf  ("%d", &(aktr -> game_mode));
-
+    
     int game_mode = aktr -> game_mode;
 
     switch (game_mode)
     {
         case 1:
             printf ("You choice guessing game, lets start!\n");
-            akinator_mode_1 (aktr, cur_node);
+            akinator_mode_1 (aktr, aktr -> root);
             break;
         
         default:
@@ -200,15 +202,42 @@ tree_node* get_answer (akinator_tree* aktr, tree_node* cur_node)
 
 //===================================================================================
 
-void akinator_destruct  (akinator_tree* aktr, text* base_info)
+void akinator_graph (akinator_tree* aktr)
 {
     assert (aktr);
     assert (aktr -> root);
-    assert (base_info);
-    assert (base_info -> file_buffer);
+
+    FILE* grph_viz = fopen ("GraphViz/base_dump.dot", "wb");
+    assert (grph_viz);
+    fprintf (grph_viz, "digraph Akinator {\n");
+
+    fprintf (grph_viz, "\"Hello\" -> \"World\";\n");
+
+    fprintf (grph_viz, "}");
+    fclose (grph_viz);
+
+    system ("dot -Tpng GraphViz/base_dump.dot -o GraphViz/base_dump.png");
+}
+
+//===================================================================================
+
+void node_graph ()
+{
+
+}
+
+//===================================================================================
+
+void akinator_destruct (akinator_tree* aktr)
+{
+    assert (aktr);
+    assert (aktr -> root);
+    assert (aktr -> base_info);
+    assert ((aktr -> base_info) -> file_buffer);
 
     tree_destuct (aktr -> root);
-    free (base_info -> file_buffer);
+    free ((aktr -> base_info) -> file_buffer);
+    free (aktr -> base_info);
 }
 
 //===================================================================================
