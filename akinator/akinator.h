@@ -27,6 +27,8 @@ tree_node* create_akinator_node (char* buffer, int& idx);
 tree_node* get_answer           (akinator_tree* aktr, tree_node* cur_node);
 
 void akinator_graph (akinator_tree* aktr);
+void node_graph (tree_node* cur_node, FILE* grph_viz);  
+
 //===================================================================================
 
 #endif

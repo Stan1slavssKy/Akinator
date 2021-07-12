@@ -210,9 +210,10 @@ void akinator_graph (akinator_tree* aktr)
     FILE* grph_viz = fopen ("GraphViz/base_dump.dot", "wb");
     assert (grph_viz);
     
-    fprintf (grph_viz, "digraph Akinator {\n");
-    fprintf (grph_viz, "node [shape=\"circle\"]\n");
-
+    fprintf (grph_viz, "digraph Akinator \n{\n");
+    fprintf (grph_viz, "\t\tnode [shape = \"circle\", color = \"darkgreen\", fontcolor = \"purple\"];\n");
+    fprintf (grph_viz, "\t\tedge [color = \"darkgreen\"];\n\n");
+    
     node_graph (aktr -> root, grph_viz);
 
     fprintf (grph_viz, "}");    
@@ -236,8 +237,8 @@ void node_graph (tree_node* cur_node, FILE* grph_viz)
         char* left_data  = cur_node -> left  -> data;
         char* right_data = cur_node -> right -> data;
 
-        fprintf (grph_viz, "\"%s\" -> \"%s\";\n", cur_data, left_data);
-        fprintf (grph_viz, "\"%s\" -> \"%s\";\n", cur_data, right_data);
+        fprintf (grph_viz, "\t\t\"%s\" -> \"%s\"[label = \"No\"];\n",  cur_data, left_data);
+        fprintf (grph_viz, "\t\t\"%s\" -> \"%s\"[label = \"Yes\"];\n", cur_data, right_data);
 
         node_graph (cur_node -> right, grph_viz);
         node_graph (cur_node -> left,  grph_viz);
