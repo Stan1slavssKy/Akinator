@@ -16,7 +16,8 @@ VALGRIND_FLAGS = --leak-check=full
 AKINATOR_DIR = ./akinator
 TREE_DIR	 = ./tree
 LIBS_DIR     = ./libs
-
+GRAPH_DIR    = ./GraphViz
+	 
 SOURCE = $(AKINATOR_DIR)/main.cpp $(AKINATOR_DIR)/akinator.cpp $(TREE_DIR)/tree.cpp $(LIBS_DIR)/Onegin.cpp
 OBJECT = $(SOURCE:.cpp=.o)
 OUTPUT = Akinator
@@ -45,6 +46,6 @@ Onegin.o: $(LIBS_DIR)/Onegin.cpp
 	$(CXX) -c $^
 
 clean:
-	rm -f *.o *.a $(OUTPUT)
+	rm -f *.o *.a $(OBJECT) $(OUTPUT)
 
 #==========================================================================================
