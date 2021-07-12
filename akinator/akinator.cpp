@@ -209,21 +209,39 @@ void akinator_graph (akinator_tree* aktr)
 
     FILE* grph_viz = fopen ("GraphViz/base_dump.dot", "wb");
     assert (grph_viz);
+    
     fprintf (grph_viz, "digraph Akinator {\n");
+    fprintf (grph_viz, "node [shape=\"circle\"]\n");
 
-    fprintf (grph_viz, "\"Hello\" -> \"World\";\n");
+    node_graph (aktr -> root, grph_viz);
 
-    fprintf (grph_viz, "}");
-    fclose (grph_viz);
+    fprintf (grph_viz, "}");    
+
+    fclose  (grph_viz);
 
     system ("dot -Tpng GraphViz/base_dump.dot -o GraphViz/base_dump.png");
 }
 
 //===================================================================================
 
-void node_graph ()
-{
+void node_graph (tree_node* cur_node, FILE* grph_viz)
+{  
+    assert (cur_node);
+    assert (grph_viz);
 
+    char* cur_data = cur_node -> data;
+
+    if (cur_node -> right != nullptr && cur_node -> left != nullptr)
+    {
+        char* left_data  = cur_node -> left  -> data;
+        char* right_data = cur_node -> right -> data;
+
+        fprintf (grph_viz, "\"%s\" -> \"%s\";\n", cur_data, left_data);
+        fprintf (grph_viz, "\"%s\" -> \"%s\";\n", cur_data, right_data);
+
+        node_graph (cur_node -> right, grph_viz);
+        node_graph (cur_node -> left,  grph_viz);
+    }
 }
 
 //===================================================================================
