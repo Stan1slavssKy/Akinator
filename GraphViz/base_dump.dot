@@ -1,3 +1,20 @@
-digraph Akinator {
-"Hello" -> "World";
+digraph Akinator 
+{
+		node [shape = "circle", color = "darkgreen", fontcolor = "purple"];
+		edge [color = "darkgreen"];
+
+		"Animal?" -> "Human?"[label = "No"];
+		"Animal?" -> "Cat?"[label = "Yes"];
+		"Cat?" -> "Star in the movie?"[label = "No"];
+		"Cat?" -> "Live in 1 hotel?"[label = "Yes"];
+		"Live in 1 hotel?" -> "Ne Poltorashka"[label = "No"];
+		"Live in 1 hotel?" -> "Poltorashka"[label = "Yes"];
+		"Star in the movie?" -> "Ne Hatiko"[label = "No"];
+		"Star in the movie?" -> "Hatiko"[label = "Yes"];
+		"Human?" -> "Robot?"[label = "No"];
+		"Human?" -> "Singer?"[label = "Yes"];
+		"Singer?" -> "Ovchinkin"[label = "No"];
+		"Singer?" -> "Morgernshtern"[label = "Yes"];
+		"Robot?" -> "Compucter"[label = "No"];
+		"Robot?" -> "Roma Glaz"[label = "Yes"];
 }
