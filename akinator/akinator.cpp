@@ -41,7 +41,7 @@ void akinator_menu (akinator_tree* aktr)
         case 1:
         {
             printf ("You choice guessing game, lets start!\n");
-           // akinator_mode_1 (aktr, aktr -> root);
+            akinator_mode_1 (aktr -> root);
             break;
         }
             
@@ -71,14 +71,14 @@ void akinator_menu (akinator_tree* aktr)
 
 int processing_mod_input ()
 {
-    char* mode_buf = (char*) calloc (MAX_MODE_SYM, sizeof (char));;
+    char* mode_buf = (char*) calloc (MAX_SYM, sizeof (char));;
     assert (mode_buf);
 
     int   game_mode = 0;
     int   nmb_symb  = 0;
     char* pointer   = mode_buf;
 
-    while ((*pointer = getchar ()) != '\n' && (nmb_symb < MAX_MODE_SYM))
+    while ((*pointer = getchar ()) != '\n' && (nmb_symb < MAX_SYM))
     {
         pointer++;
         nmb_symb++;    
@@ -113,10 +113,8 @@ int processing_mod_input ()
 
 //===================================================================================
 
-void akinator_mode_1 (akinator_tree* aktr, tree_node* cur_node)
+void akinator_mode_1 (tree_node* cur_node)
 {
-    assert (aktr);
-    assert (aktr -> root);
     assert (cur_node);
 
     while (true)
@@ -127,33 +125,110 @@ void akinator_mode_1 (akinator_tree* aktr, tree_node* cur_node)
             break;
         }
 
-        printf ("Is it %s?\n", cur_node -> data);
-        cur_node = get_answer (aktr, cur_node);
+        cur_node = get_answer (cur_node);
+        if (cur_node == nullptr) return;
     }
 }
 
 //===================================================================================
 
-tree_node* get_answer (akinator_tree* aktr, tree_node* cur_node)
+tree_node* get_answer (tree_node* cur_node)
 {
-    assert (aktr);
-    assert (aktr -> root);
     assert (cur_node);
 
-    char answer[3] = {};
+    int nmb_symbs = processing_answer_input ();
 
-    scanf ("%s", answer);
+    printf ("NMB_SYMBOLS = %d\n", nmb_symbs);
 
-    if (!strcmp (answer, "yes"))
-        cur_node = cur_node -> right;  
-    
-    else if (!strcmp (answer, "no"))
-        cur_node = cur_node -> left;  
-
+    if (nmb_symbs == 2)
+    {
+        printf ("\t\t\t\tNo\n");
+        return nullptr;
+    }
+    else if (nmb_symbs == 3)
+    {
+        printf ("\t\t\t\tYes\n");
+        return nullptr;
+    }
     else 
-        printf ("Sorry you didn't enter yes or no.\n");
+    {
+        printf ("Error, %d", __LINE__);
+        return nullptr;
+    }
 
     return cur_node;
+}
+
+//===================================================================================
+
+int processing_answer_input ()
+{
+    char* answer_buff = (char*) calloc (MAX_SYM, sizeof (char));
+    assert (answer_buff);
+
+    int   nmb_symb = 0;
+    char* pointer  = answer_buff;
+
+    while ((*pointer = getchar()) != '\n' && (nmb_symb < MAX_SYM))
+    {
+        pointer++;
+        nmb_symb++;   
+    }
+    
+    if (nmb_symb > 3)
+    {
+        printf ("You entered too much symbols, please try again. You need to write \"yes\" or \"no\" without \"\".\n");
+        free (answer_buff);
+        int x = processing_answer_input ();
+        return x;
+    }
+    else if (nmb_symb == strlen ("yes"))                                     
+    {                                                                        
+        answer_buff = (char*) realloc (answer_buff, NMB_S_YES);          
+        assert (answer_buff);                                         
+        
+        if (!strcmp (answer_buff, "yes"))                                    
+        {                                          
+            free (answer_buff);                                              
+            return nmb_symb;                                                 
+        }                                                                    
+        else                                                                 
+        {                                                                    
+            printf ("You need to write \"yes\" or \"no\" without \"\".\n");  
+            free (answer_buff);                                              
+            int x = processing_answer_input ();                              
+            return x;                                                        
+        }
+    }                               
+
+    else if (nmb_symb == strlen ("no"))                                     
+    {                                                                        
+        answer_buff = (char*) realloc (answer_buff, NMB_S_NO);          
+        assert (answer_buff);                                                                    
+        
+        if (!strcmp (answer_buff, "no"))                                    
+        {                                                                                                                                 
+            free (answer_buff);                                              
+            return nmb_symb;                                                 
+        }                                                                    
+        else                                                                 
+        {                                                                    
+            printf ("You need to write \"yes\" or \"no\" without \"\".\n");  
+            free (answer_buff);                                              
+            int x = processing_answer_input ();                              
+            return x;                                                        
+        }                                                                        
+    }
+    else
+    {
+        printf ("You need to write \"yes\" or \"no\" without \"\".\n");
+        free (answer_buff);
+        int x = processing_answer_input ();
+        return x;    
+    }
+
+    free (answer_buff);
+    return -1;
 }
 
 //===================================================================================
