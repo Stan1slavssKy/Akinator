@@ -17,117 +17,7 @@ void akinator_construct (akinator_tree* aktr, char* file_name)
 
     create_akinator_tree (aktr, idx);
     akinator_graph (aktr);
-  //  akinator_menu (aktr);
-}
-
-//===================================================================================
-
-void create_akinator_tree (akinator_tree* aktr, int idx)
-{
-    assert (aktr);
-    assert (aktr -> base_info);
-    assert ((aktr -> base_info) -> file_buffer);
-
-    char* buffer = (aktr -> base_info) -> file_buffer;
-
-    if (aktr -> root == nullptr) 
-    {
-        while (isspace(buffer[idx])) idx++;
-
-        if (buffer[idx] == '{')
-        {
-            aktr -> root = create_akinator_node (buffer, idx);    
-        }
-        else 
-        {
-            printf ("Error, %d", __LINE__);
-        }
-    }
-
-    else
-        printf ("Error, second create of aktr tree, %d", __LINE__);
-}   
-
-//===================================================================================
-
-tree_node* create_akinator_node (char* buffer, int& idx)
-{
-    assert (buffer);
-
-    if (buffer[idx] == '{')
-    {    
-        idx++;
-        
-        while (isspace(buffer[idx]))
-            idx++;
-    }
-    else 
-    {
-        printf ("Error, %d", __LINE__);
-    }
-
-    if (buffer[idx] == '}')
-    {
-        return nullptr;
-    }
-
-    tree_node* cur_node = (tree_node*) calloc (1, sizeof (tree_node));
-    assert (cur_node);
-
-    char* word_ptr = create_word (buffer, cur_node, idx);
-    assert (word_ptr);
-
-    if (buffer[idx] == '{')
-    {
-        cur_node -> right = create_akinator_node (buffer, idx);
-    }
-
-    while (isspace(buffer[idx]))
-        idx++;
-
-    if (buffer[idx] == '{')
-    {
-        cur_node -> left  = create_akinator_node (buffer, idx);
-    }
-
-    while (isspace(buffer[idx]))
-        idx++;
-
-    
-    if (buffer[idx] == '}')
-    {
-        idx++;
-        return cur_node;
-    }   
-}
-
-//===================================================================================
-
-char* create_word (char* buffer, tree_node* cur_node, int &idx)
-{
-    assert (buffer);
-
-    char* word_ptr = buffer + idx;
-   
-    cur_node -> data = word_ptr;
-
-    while (true)
-    {
-        if (buffer[idx] == '\n')
-        {   
-            buffer[idx] =  '\0';
-            idx++;
-            break;
-        }
-        idx++;
-    }
-
-    printf ("slovo = %s\n", word_ptr);
-    
-    while (isspace(buffer[idx]))
-        idx++;    
-
-    return word_ptr;      
+    akinator_menu  (aktr);
 }
 
 //===================================================================================
@@ -137,22 +27,88 @@ void akinator_menu (akinator_tree* aktr)
     assert (aktr);
     assert (aktr -> root);
 
-    printf ("Hi, I'm Akinator, please choise game mode:\n\t\t\t  1) guessing game\n");
-    scanf  ("%d", &(aktr -> game_mode));
-    
+    printf ("Hi, I'm Akinator, please choise game mode:\n"
+    "1) guessing game\n"
+    "2) check base\n"
+    "3) exit\n");
+
+    aktr -> game_mode = processing_mod_input ();
+
     int game_mode = aktr -> game_mode;
 
     switch (game_mode)
     {
         case 1:
+        {
             printf ("You choice guessing game, lets start!\n");
-            akinator_mode_1 (aktr, aktr -> root);
+           // akinator_mode_1 (aktr, aktr -> root);
             break;
-        
+        }
+            
+        case 2:
+        {
+            printf ("You have chosen to view the database. Here it is:\n");
+            const char string[] = "firefox GraphViz/base_dump.png";
+            system (string);
+            break;
+        }
+
+        case 3:
+        {
+            printf ("You want exit. Bye...\n");
+            return;
+        }
+
         default:
+        {
             printf ("Sorry I don't know this mode\n");
             break;
+        }
     }
+}
+
+//===================================================================================
+
+int processing_mod_input ()
+{
+    char* mode_buf = (char*) calloc (MAX_MODE_SYM, sizeof (char));;
+    assert (mode_buf);
+
+    int   game_mode = 0;
+    int   nmb_symb  = 0;
+    char* pointer   = mode_buf;
+
+    while ((*pointer = getchar ()) != '\n' && (nmb_symb < MAX_MODE_SYM))
+    {
+        pointer++;
+        nmb_symb++;    
+    }
+
+    if (nmb_symb > 1)
+    {
+        printf ("Error, you entered too much symbols, please try again.\n");
+        free (mode_buf);
+
+        game_mode = processing_mod_input ();
+        return game_mode; 
+    }
+    else if (isdigit (*mode_buf))
+    {
+        game_mode = *mode_buf - CODE_ZERO;
+        free (mode_buf);
+
+        return game_mode;
+    }
+    else
+    {
+        printf ("Please enter a number, not a symbol.\n");
+        free (mode_buf);
+
+        game_mode = processing_mod_input ();
+        return game_mode;  
+    }
+
+    return -1;
 }
 
 //===================================================================================
@@ -198,51 +154,6 @@ tree_node* get_answer (akinator_tree* aktr, tree_node* cur_node)
         printf ("Sorry you didn't enter yes or no.\n");
 
     return cur_node;
-}
-
-//===================================================================================
-
-void akinator_graph (akinator_tree* aktr)
-{
-    assert (aktr);
-    assert (aktr -> root);
-
-    FILE* grph_viz = fopen ("GraphViz/base_dump.dot", "wb");
-    assert (grph_viz);
-    
-    fprintf (grph_viz, "digraph Akinator \n{\n");
-    fprintf (grph_viz, "\t\tnode [shape = \"circle\", color = \"darkgreen\", fontcolor = \"purple\"];\n");
-    fprintf (grph_viz, "\t\tedge [color = \"darkgreen\"];\n\n");
-    
-    node_graph (aktr -> root, grph_viz);
-
-    fprintf (grph_viz, "}");    
-
-    fclose  (grph_viz);
-
-    system ("dot -Tpng GraphViz/base_dump.dot -o GraphViz/base_dump.png");
-}
-
-//===================================================================================
-
-void node_graph (tree_node* cur_node, FILE* grph_viz)
-{  
-    assert (cur_node);
-    assert (grph_viz);
-
-    char* cur_data = cur_node -> data;
-
-    if (cur_node -> right != nullptr && cur_node -> left != nullptr)
-    {
-        char* left_data  = cur_node -> left  -> data;
-        char* right_data = cur_node -> right -> data;
-
-        fprintf (grph_viz, "\t\t\"%s\" -> \"%s\"[label = \"No\"];\n",  cur_data, left_data);
-        fprintf (grph_viz, "\t\t\"%s\" -> \"%s\"[label = \"Yes\"];\n", cur_data, right_data);
-
-        node_graph (cur_node -> right, grph_viz);
-        node_graph (cur_node -> left,  grph_viz);
-    }
 }
 
 //===================================================================================
