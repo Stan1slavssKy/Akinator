@@ -107,32 +107,29 @@ int processing_mod_input ()
 void akinator_mode_1 (akinator_tree* aktr, tree_node* cur_node)
 {
     assert (aktr);
-
-    if (cur_node != nullptr)
+    
+    while (cur_node != nullptr)
     {
-        printf ("Im here\n");   
-        printf ("%s\n", cur_node -> data);//!!!!!!!!!!!!!!!!
+        printf ("%s\n", cur_node -> data);
         cur_node = get_answer (aktr, cur_node);
-    }
 
-    if (cur_node -> left == nullptr && cur_node -> right == nullptr)
-    {
-        printf ("I think it is %s.\n", cur_node -> data);
-        get_answer (aktr, cur_node);
+        if (cur_node -> left == nullptr && cur_node -> right == nullptr)
+        {
+            printf ("I think it is %s.\n", cur_node -> data);
+            cur_node = get_answer (aktr, cur_node);
+    
+            if (cur_node == nullptr && aktr -> answer == 1)
+            {
+                printf ("Thanks for game. Good bye!\n");
+                return;
+            }
+            else if (cur_node == nullptr && aktr -> answer == 0)
+            {
+                printf ("I don't know what are you thinkong about...\n");
+                return;
+            }
+        }
     }
-
-    if (cur_node == nullptr && aktr -> answer == 3)
-    {
-        return;
-    }
-
-    if (cur_node == nullptr && aktr -> answer == 2)
-    {
-        printf ("I don't know what are you thinkong about...\n");
-        return;
-    }
-
-    akinator_mode_1 (aktr, cur_node);
 }
 
 //===================================================================================
@@ -141,16 +138,16 @@ tree_node* get_answer (akinator_tree* aktr, tree_node* cur_node)
 {
     assert (cur_node);
 
-    int nmb_symbs = processing_answer_input ();
+    int answ = processing_answer_input ();
 
-    if (nmb_symbs == 0)
+    if (answ == 0)
     {
-        aktr -> answer = nmb_symbs;
+        aktr -> answer = answ;
         cur_node = cur_node -> left;
     }
-    else if (nmb_symbs == 1)
+    else if (answ == 1)
     {
-        aktr -> answer = nmb_symbs;
+        aktr -> answer = answ;
         cur_node = cur_node -> right;
     }
     else 
