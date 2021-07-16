@@ -16,6 +16,7 @@ struct tree_node
 struct akinator_tree
 {
     int   game_mode;
+    int   answer;
     text* base_info;
     tree_node* root;
 };
@@ -23,7 +24,7 @@ struct akinator_tree
 //===================================================================================
 
 void node_destruct  (tree_node* cur_tree);
-void tree_destuct   (tree_node* cur_tree);
+void tree_destruct  (tree_node* cur_node);
 
 void  create_akinator_tree (akinator_tree* aktr, int idx);
 void  akinator_graph       (akinator_tree* aktr);
