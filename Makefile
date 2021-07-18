@@ -28,7 +28,7 @@ valgrind: $(OUTPUT)
 	valgrind $(VALGRIND_FLAGS) ./$(OUTPUT) "base"
 
 launch: $(OUTPUT)
-	./$(OUTPUT)
+	./$(OUTPUT) "base"
 
 $(OUTPUT): $(OBJECT)
 	$(CXX) $(WARNINGS) $(DEBUG_MODE) $^ -o $(OUTPUT)

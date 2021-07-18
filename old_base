@@ -1,0 +1,45 @@
+{ 
+Animal?
+        {
+        Cat?
+                {
+                Live in 1 hotel?
+                        {
+                        Poltorashka
+                        }
+                        {
+                        Ne Poltorashka
+                        }
+                }
+                {
+                Star in the movie?
+                        {
+                        Hatiko
+                        }
+                        {
+                        Ne Hatiko
+                        }
+                }
+        }
+        {
+        Human?
+                {
+                Singer?
+                        {
+                        Morgernshtern
+                        }
+                        {
+                        Ovchinkin
+                        }
+                }
+                {
+                Robot?
+                        {
+                        Roma Glaz
+                        }
+                        {
+                        Compucter
+                        }
+                }
+        }
+}

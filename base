@@ -1,45 +1,51 @@
-{ 
+{
 Animal?
-        {
-        Cat?
-                {
-                Live in 1 hotel?
-                        {
-                        Poltorashka
-                        }
-                        {
-                        Ne Poltorashka
-                        }
-                }
-                {
-                Star in the movie?
-                        {
-                        Hatiko
-                        }
-                        {
-                        Ne Hatiko
-                        }
-                }
-        }
-        {
-        Human?
-                {
-                Singer?
-                        {
-                        Morgernshtern
-                        }
-                        {
-                        Ovchinkin
-                        }
-                }
-                {
-                Robot?
-                        {
-                        Roma Glaz
-                        }
-                        {
-                        Compucter
-                        }
-                }
-        }
+		{
+		Cat?
+				{
+				Live in 1 hotel?
+						{
+						Live in 325?
+								{
+								Danik
+								}
+								{
+								Lexa
+								}
+						}
+						{
+						Ne Poltorashka
+						}
+				}
+				{
+				Star in the movie?
+						{
+						Hatiko
+						}
+						{
+						Ne Hatiko
+						}
+				}
+		}
+		{
+		Human?
+				{
+				Singer?
+						{
+						Morgernshtern
+						}
+						{
+						Ovchinkin
+						}
+				}
+				{
+				Robot?
+						{
+						Roma Glaz
+						}
+						{
+						Compucter
+						}
+				}
+		}
 }
