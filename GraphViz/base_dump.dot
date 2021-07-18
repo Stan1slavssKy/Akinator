@@ -8,7 +8,9 @@ digraph Akinator
 		"Cat?" -> "Star in the movie?"[label = "No"];
 		"Cat?" -> "Live in 1 hotel?"[label = "Yes"];
 		"Live in 1 hotel?" -> "Ne Poltorashka"[label = "No"];
-		"Live in 1 hotel?" -> "Poltorashka"[label = "Yes"];
+		"Live in 1 hotel?" -> "Live in 325?"[label = "Yes"];
+		"Live in 325?" -> "Lexa"[label = "No"];
+		"Live in 325?" -> "Danik"[label = "Yes"];
 		"Star in the movie?" -> "Ne Hatiko"[label = "No"];
 		"Star in the movie?" -> "Hatiko"[label = "Yes"];
 		"Human?" -> "Robot?"[label = "No"];
