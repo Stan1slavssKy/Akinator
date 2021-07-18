@@ -192,7 +192,8 @@ int handling_answer_input ()
 
         if (pointer - answer_buff > 3)
         {
-            printf ("You entered too much symbols, please try again. You need to write \"yes\" or \"no\" without \"\".\n");
+            printf ("You entered too much symbols, please try again. "
+            "You need to write \"yes\" or \"no\" without \"\".\n");
             ans_nmb = -1;
         }
 
@@ -228,16 +229,20 @@ void akinator_training (akinator_tree* aktr, tree_node* cur_node)
     cur_node -> left = (tree_node*) calloc (1, sizeof (tree_node));
     assert (cur_node -> left);
 
-    printf ("Please write a question that shows the difference between your object and %s?\n", cur_node -> data);
+    printf ("Please write a question that shows the difference between "
+    "your object and %s?\n", cur_node -> data);
     handling_training_input (cur_node);
 
     printf ("Please enter your word:\n");
     handling_training_input (cur_node -> right);
 
-    printf ("Please enter word which you will think about when you give a negative answer to your question:\n");
+    printf ("Please enter word which you will think about when you give "
+    "a negative answer to your question:\n");
     handling_training_input (cur_node -> left);
     
-    akinator_graph (aktr);
+    akinator_graph       (aktr);
+
+    create_akinator_base (aktr);
 }
 
 //===================================================================================
@@ -261,10 +266,56 @@ void handling_training_input (tree_node* cur_node)
     }
 
     strcpy (cur_node -> data, answ);
-
-    printf ("\t\t\t[%s]\n", cur_node -> data);
-
     free (answ);
+}
+
+//===================================================================================
+
+void create_akinator_base (akinator_tree* aktr)
+{
+    assert (aktr);
+    assert (aktr -> root);
+
+    int cur_recursion_depth = 0;
+
+    FILE* base = fopen ("base", "wb");
+    assert (base);
+
+    create_node_base (aktr -> root, base, cur_recursion_depth);
+    
+    fclose (base);
+}
+
+//===================================================================================
+
+void create_node_base (tree_node* cur_node, FILE* base, int cur_recursion_depth)
+{
+    assert (base);
+
+    if (cur_node -> right == nullptr && cur_node -> left == nullptr)
+    {
+        PLACING_TAB();
+        fprintf (base, "{\n");
+        PLACING_TAB();
+        fprintf (base, "%s\n", cur_node -> data);
+        PLACING_TAB()
+        fprintf (base, "}\n");
+        
+        return;
+    }
+
+    PLACING_TAB();
+    fprintf (base, "{\n");
+    PLACING_TAB();
+    fprintf (base, "%s\n", cur_node -> data);
+    cur_recursion_depth++;
+
+    create_node_base (cur_node -> right, base, cur_recursion_depth);
+    create_node_base (cur_node -> left,  base, cur_recursion_depth);
+
+    cur_recursion_depth--;
+    PLACING_TAB()
+    fprintf (base, "}\n");
 }
 
 //===================================================================================
