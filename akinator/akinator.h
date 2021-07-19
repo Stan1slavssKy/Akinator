@@ -37,8 +37,12 @@ void  handling_training_input (tree_node* cur_node);
 void create_akinator_base (akinator_tree* aktr);
 void create_node_base     (tree_node* cur_node, FILE* base, int cur_recursion_depth);
 void make_new_nodes       (tree_node* cur_node);
+void akinator_mode_3      (akinator_tree* aktr);
+void print_properties (tree_node* cur_node);
+void make_property    (char* word);
 
-tree_node* get_answer (akinator_tree* aktr, tree_node* cur_node);
+tree_node* tree_search (tree_node* cur_node, char* word);
+tree_node* get_answer     (akinator_tree* aktr, tree_node* cur_node);
 
 //===================================================================================
 
