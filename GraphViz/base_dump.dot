@@ -3,20 +3,20 @@ digraph Akinator
 		node [shape = "circle", color = "darkgreen", fontcolor = "purple"];
 		edge [color = "darkgreen"];
 
-		"Animal?" -> "Human?"[label = "No"];
-		"Animal?" -> "Cat?"[label = "Yes"];
-		"Cat?" -> "Star in the movie?"[label = "No"];
-		"Cat?" -> "Live in 1 hotel?"[label = "Yes"];
-		"Live in 1 hotel?" -> "Ne Poltorashka"[label = "No"];
-		"Live in 1 hotel?" -> "Live in 325?"[label = "Yes"];
-		"Live in 325?" -> "Lexa"[label = "No"];
-		"Live in 325?" -> "Danik"[label = "Yes"];
-		"Star in the movie?" -> "Ne Hatiko"[label = "No"];
-		"Star in the movie?" -> "Hatiko"[label = "Yes"];
-		"Human?" -> "Robot?"[label = "No"];
-		"Human?" -> "Singer?"[label = "Yes"];
-		"Singer?" -> "Ovchinkin"[label = "No"];
-		"Singer?" -> "Morgernshtern"[label = "Yes"];
-		"Robot?" -> "Compucter"[label = "No"];
-		"Robot?" -> "Roma Glaz"[label = "Yes"];
+		"Человек?" -> "Животное?"[label = "No"];
+		"Человек?" -> "Живет в 218?"[label = "Yes"];
+		"Живет в 218?" -> "Живет в 325?"[label = "No"];
+		"Живет в 218?" -> "Черные волосы?"[label = "Yes"];
+		"Черные волосы?" -> "Макс"[label = "No"];
+		"Черные волосы?" -> "Руслан"[label = "Yes"];
+		"Живет в 325?" -> "Вася"[label = "No"];
+		"Живет в 325?" -> "Рома"[label = "Yes"];
+		"Животное?" -> "Есть монитор?"[label = "No"];
+		"Животное?" -> "Кот?"[label = "Yes"];
+		"Кот?" -> "Снимался в фильме?"[label = "No"];
+		"Кот?" -> "Полторашка"[label = "Yes"];
+		"Снимался в фильме?" -> "Собака"[label = "No"];
+		"Снимался в фильме?" -> "Хатико"[label = "Yes"];
+		"Есть монитор?" -> "Робот"[label = "No"];
+		"Есть монитор?" -> "Компбютер"[label = "Yes"];
 }
