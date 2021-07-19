@@ -5,14 +5,11 @@
 
 //===================================================================================
 
-#define PLACING_TAB()                                    \
-    for (int idx = 0; idx < cur_recursion_depth; idx++)  \
-        {                                                \
-            fprintf (base, "\t\t");                      \
-        }                                                \
-
+#define PLACING_TAB()                                   \
+    fprintf (base, "%*s", cur_recursion_depth * 8, ""); \
+                                                                    
 //===================================================================================
-   
+
 const int MAX_SYM   = 100;
 const int CODE_ZERO = 48;
 
@@ -39,6 +36,7 @@ void  handling_training_input (tree_node* cur_node);
 
 void create_akinator_base (akinator_tree* aktr);
 void create_node_base     (tree_node* cur_node, FILE* base, int cur_recursion_depth);
+void make_new_nodes       (tree_node* cur_node);
 
 tree_node* get_answer (akinator_tree* aktr, tree_node* cur_node);
 
