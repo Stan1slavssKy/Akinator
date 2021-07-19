@@ -56,6 +56,16 @@ void akinator_menu (akinator_tree* aktr)
 
         case 3:
         {
+            printf ("Вы выбрали режим поиск свойств.\n"
+            "Пожалуйста введите слово свойств которого вы хотите узнать.\n");
+            akinator_mode_3 (aktr);
+
+            akinator_menu (aktr);
+            break;
+        }
+
+        case 4:
+        {
             printf ("Ты захотел выйти. Пока...\n");
             return;
         }
@@ -75,7 +85,8 @@ void print_hello ()
     printf ("Привет, я Акинатор. Пожалуйста выбери режим игры:\n"
     "1) режим отгадывания\n"
     "2) просмотреть базу\n"
-    "3) выход\n");
+    "3) режим поиска свойств\n"
+    "4) выход\n");
 }
 
 //===================================================================================
@@ -95,7 +106,7 @@ int handling_mod_input ()
 
         if (pointer - mode_buff > 1)
         {
-            printf ("Error, you entered too much symbols, please try again.\n");
+            printf ("Вы ввели слишком много символов попробуйте еще раз.\n");
             game_mode = -1;
         }
         else if (isdigit (*mode_buff))
@@ -104,7 +115,7 @@ int handling_mod_input ()
         }
         else
         {
-            printf ("Please enter a number, not a symbol.\n");
+            printf ("Поожалуйста введите число, а не букву.\n");
             game_mode = -1;  
         }
     }
@@ -192,13 +203,6 @@ int handling_answer_input ()
         char* pointer = strchr (answer_buff, '\n');
         *pointer = '\0';
 
-        if (pointer - answer_buff > 3)
-        {
-            printf ("You entered too much symbols, please try again. "
-            "You need to write \"yes\" or \"no\" without \"\".\n");
-            ans_nmb = -1;
-        }
-
         if (!strcmp (answer_buff, "да"))
         { 
             ans_nmb = 1;
@@ -209,7 +213,7 @@ int handling_answer_input ()
         }
         else 
         {
-            printf ("Вам надо ввечти \"да\" или \"нет\" без \"\".\n");
+            printf ("Вам надо ввести \"да\" или \"нет\" без \"\".\n");
             ans_nmb = -1;
         }
     }
@@ -328,6 +332,57 @@ void create_node_base (tree_node* cur_node, FILE* base, int cur_recursion_depth)
     PLACING_TAB()
     fprintf (base, "}\n");
 }
+
+//===================================================================================
+
+void akinator_mode_3 (akinator_tree* aktr)
+{
+    assert (aktr);
+
+    char* word = (char*) calloc (MAX_SYM, sizeof (char));
+    assert (word);
+
+    fgets (word, MAX_SYM, stdin);
+    char* pointer = strchr (word, '\n');
+    *pointer = '\0';
+
+    int len = pointer - word;
+
+    word = (char*) realloc (word, len * sizeof (char));
+    assert (word);
+
+    tree_node* word_node = nullptr;
+
+    word_node = tree_search (aktr -> root, word, word_node);
+    
+    if (word_node == nullptr)
+    {
+        printf ("Такого слова я не знаю.\n");
+    }
+    else 
+    {
+        printf ("\t\t\tWord is  = [%s]\n", word_node -> data);
+    }
+
+    free (word);
+}
+
+//===================================================================================
+
+tree_node* tree_search (tree_node* cur_node, char* word, tree_node* word_node)
+{
+    assert (word);
+
+    if (!strcmp (cur_node -> data, word))
+    {
+        word_node = cur_node;    
+    }
+
+    word_node = tree_search (cur_node -> right, word, word_node);
+    word_node = tree_search (cur_node -> left , word, word_node);
+
+    return word_node;
+}   
 
 //===================================================================================
 
