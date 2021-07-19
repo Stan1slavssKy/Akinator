@@ -226,23 +226,32 @@ void akinator_training (akinator_tree* aktr, tree_node* cur_node)
     cur_node -> right = (tree_node*) calloc (1, sizeof (tree_node));
     assert (cur_node -> right);
 
-    cur_node -> left = (tree_node*) calloc (1, sizeof (tree_node));
+    cur_node -> left  = (tree_node*) calloc (1, sizeof (tree_node));
     assert (cur_node -> left);
 
-    printf ("Please write a question that shows the difference between "
-    "your object and %s?\n", cur_node -> data);
-    handling_training_input (cur_node);
-
-    printf ("Please enter your word:\n");
-    handling_training_input (cur_node -> right);
-
-    printf ("Please enter word which you will think about when you give "
-    "a negative answer to your question:\n");
-    handling_training_input (cur_node -> left);
+    make_new_nodes (cur_node);
     
     akinator_graph       (aktr);
-
     create_akinator_base (aktr);
+}
+
+//===================================================================================
+
+void make_new_nodes (tree_node* cur_node)
+{
+    printf ("Please enter your word:\n");
+    handling_training_input (cur_node -> right);
+    
+    int len = strlen (cur_node -> data);
+    
+    cur_node -> left -> data = (char*) calloc (len, sizeof (char));
+    assert (cur_node -> data);
+
+    strcpy (cur_node -> left -> data, cur_node -> data);
+
+    printf ("Please write a question that shows the difference between "
+    "%s and %s?\n", cur_node -> right -> data, cur_node -> left -> data);
+    handling_training_input (cur_node);
 }
 
 //===================================================================================
