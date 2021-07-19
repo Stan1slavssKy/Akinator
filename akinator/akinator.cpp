@@ -37,7 +37,7 @@ void akinator_menu (akinator_tree* aktr)
     {
         case 1:
         {
-            printf ("You choice guessing game, lets start!\n");
+            printf ("Вы выбрали режим отгадывания. Давайте начнем!\n");
             akinator_mode_1 (aktr, aktr -> root);
             
             akinator_menu   (aktr);
@@ -46,7 +46,7 @@ void akinator_menu (akinator_tree* aktr)
             
         case 2:
         {
-            printf ("You have chosen to view the database. Here it is:\n");
+            printf ("Ты выбрал просмотр базы. Так вот же она:\n");
             const char string[] = "firefox GraphViz/base_dump.png";
             system (string);
             
@@ -56,13 +56,13 @@ void akinator_menu (akinator_tree* aktr)
 
         case 3:
         {
-            printf ("You want exit. Bye...\n");
+            printf ("Ты захотел выйти. Пока...\n");
             return;
         }
 
         default:
         {
-            printf ("Sorry I don't know this mode\n");
+            printf ("Прости, но я не знаю такого режима игры.\n");
             break;
         }
     }
@@ -72,10 +72,10 @@ void akinator_menu (akinator_tree* aktr)
 
 void print_hello ()
 {
-    printf ("Hi, I'm Akinator, please choise game mode:\n"
-    "1) guessing game\n"
-    "2) check base\n"
-    "3) exit\n");
+    printf ("Привет, я Акинатор. Пожалуйста выбери режим игры:\n"
+    "1) режим отгадывания\n"
+    "2) просмотреть базу\n"
+    "3) выход\n");
 }
 
 //===================================================================================
@@ -127,7 +127,7 @@ void akinator_mode_1 (akinator_tree* aktr, tree_node* cur_node)
 
         if (cur_node -> left == nullptr && cur_node -> right == nullptr)
         {
-            printf ("I think it is %s.\n", cur_node -> data);
+            printf ("Я думаю это %s.\n", cur_node -> data);
                     
             tree_node* prev_cur_node = cur_node;
                     
@@ -135,13 +135,15 @@ void akinator_mode_1 (akinator_tree* aktr, tree_node* cur_node)
     
             if (cur_node == nullptr && aktr -> answer == YES)
             {
-                printf ("Thanks for game. Good bye!\n");
+                printf ("Спасибо за игру. Пока!\n\n");
                 return;
             }
             else if (cur_node == nullptr && aktr -> answer == NO)
             {
-                printf ("I don't know what are you thinking about...\n");
+                printf ("Я не знаю, что ты загадал...\n");
                 akinator_training (aktr, prev_cur_node);
+                printf ("Спасибо за игру. Пока!\n\n");
+                
                 return;
             }
         }
@@ -197,17 +199,17 @@ int handling_answer_input ()
             ans_nmb = -1;
         }
 
-        if (!strcmp (answer_buff, "yes"))
+        if (!strcmp (answer_buff, "да"))
         { 
             ans_nmb = 1;
         }
-        else if (!strcmp (answer_buff, "no"))
+        else if (!strcmp (answer_buff, "нет"))
         {
             ans_nmb = 0;
         }
         else 
         {
-            printf ("You need to write \"yes\" or \"no\" without \"\".\n");
+            printf ("Вам надо ввечти \"да\" или \"нет\" без \"\".\n");
             ans_nmb = -1;
         }
     }
@@ -239,7 +241,7 @@ void akinator_training (akinator_tree* aktr, tree_node* cur_node)
 
 void make_new_nodes (tree_node* cur_node)
 {
-    printf ("Please enter your word:\n");
+    printf ("Пожалуйста введите слово, которое вы загадали:\n");
     handling_training_input (cur_node -> right);
     
     int len = strlen (cur_node -> data);
@@ -249,8 +251,8 @@ void make_new_nodes (tree_node* cur_node)
 
     strcpy (cur_node -> left -> data, cur_node -> data);
 
-    printf ("Please write a question that shows the difference between "
-    "%s and %s?\n", cur_node -> right -> data, cur_node -> left -> data);
+    printf ("Пожалуйста введите вопрос, который покажет разницу между "
+    "%s и  %s?\n", cur_node -> right -> data, cur_node -> left -> data);
     handling_training_input (cur_node);
 }
 
