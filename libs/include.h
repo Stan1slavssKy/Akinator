@@ -6,5 +6,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <assert.h>
+#include <locale.h>
 
 #endif
