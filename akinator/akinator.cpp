@@ -353,15 +353,15 @@ void akinator_mode_3 (akinator_tree* aktr)
 
     tree_node* word_node = nullptr;
 
-    word_node = tree_search (aktr -> root, word, word_node);
-    
+    word_node = tree_search (aktr -> root, word);
+ 
     if (word_node == nullptr)
     {
-        printf ("Такого слова я не знаю.\n");
+        printf ("Такого слова я не знаю. Спасибо за игру, пока!\n\n");
     }
     else 
     {
-        printf ("\t\t\tWord is  = [%s]\n", word_node -> data);
+        print_properties (word_node);
     }
 
     free (word);
@@ -369,20 +369,69 @@ void akinator_mode_3 (akinator_tree* aktr)
 
 //===================================================================================
 
-tree_node* tree_search (tree_node* cur_node, char* word, tree_node* word_node)
+tree_node* tree_search (tree_node* cur_node, char* word)
 {
     assert (word);
 
+    printf ("Fisting = %s, second = %s\n", cur_node -> data, word);
+    
     if (!strcmp (cur_node -> data, word))
     {
-        word_node = cur_node;    
+        return cur_node;    
     }
 
-    word_node = tree_search (cur_node -> right, word, word_node);
-    word_node = tree_search (cur_node -> left , word, word_node);
+    tree_node* out = nullptr;
 
-    return word_node;
+    if (cur_node -> left  != nullptr) 
+    {
+        out = tree_search (cur_node -> left,  word);
+    }
+    if (cur_node -> right != nullptr && out == nullptr) 
+    {
+        out = tree_search (cur_node -> right, word);
+    }
+
+    return out;
 }   
+
+//===================================================================================
+
+void print_properties (tree_node* cur_node)
+{
+    assert (cur_node);
+
+    printf ("Свойства объекта %s:\n", cur_node -> data);
+
+    while (cur_node -> prev_node != nullptr)
+    {
+        make_property (cur_node -> prev_node -> data);
+
+        if (cur_node -> prev_node -> right == cur_node)
+            printf ("\t-%s\n", cur_node -> prev_node -> data);
+
+        else if (cur_node -> prev_node -> left == cur_node)
+            printf ("\t-не %s\n", cur_node -> prev_node -> data);
+
+        else
+            printf ("Error %d\n", __LINE__);   
+         
+        cur_node = cur_node -> prev_node;
+    }
+
+    printf ("\n\n");
+}
+
+//===================================================================================
+
+void make_property (char* word)
+{
+    char* pointer = strchr (word, '?');
+   
+    if (pointer != nullptr)
+    {
+        *pointer = '\0';
+    }
+}
 
 //===================================================================================
 
