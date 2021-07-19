@@ -60,6 +60,7 @@ tree_node* create_akinator_node (char* buffer, int& idx)
     if (buffer[idx] == '{')
     {
         cur_node -> right = create_akinator_node (buffer, idx);
+        cur_node -> right -> prev_node = cur_node;
     }
 
     while (isspace (buffer[idx]))
@@ -68,6 +69,7 @@ tree_node* create_akinator_node (char* buffer, int& idx)
     if (buffer[idx] == '{')
     {
         cur_node -> left  = create_akinator_node (buffer, idx);
+        cur_node -> left -> prev_node = cur_node;
     }
 
     while (isspace (buffer[idx]))
@@ -143,16 +145,11 @@ void node_graph (tree_node* cur_node, FILE* grph_viz)
     assert (cur_node);
     assert (grph_viz);
 
-    char* cur_data = cur_node -> data;
-
     if (cur_node -> right != nullptr && cur_node -> left != nullptr)
     {
-        char* left_data  = cur_node -> left  -> data;
-        char* right_data = cur_node -> right -> data;
-
-        fprintf (grph_viz, "\t\t\"%s\" -> \"%s\"[label = \"No\"];\n",  cur_data, left_data);
-        fprintf (grph_viz, "\t\t\"%s\" -> \"%s\"[label = \"Yes\"];\n", cur_data, right_data);
-
+        fprintf (grph_viz, "\t\t\"%s\" -> \"%s\"[label = \"No\"];\n",  cur_node -> data, cur_node -> left -> data);        
+        fprintf (grph_viz, "\t\t\"%s\" -> \"%s\"[label = \"Yes\"];\n", cur_node -> data, cur_node -> right -> data);
+       
         node_graph (cur_node -> right, grph_viz);
         node_graph (cur_node -> left,  grph_viz);
     }

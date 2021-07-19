@@ -9,8 +9,9 @@
 struct tree_node 
 {
     char*  data;
-    struct tree_node *left;
-    struct tree_node *right;
+    tree_node* prev_node;
+    tree_node* left;
+    tree_node* right;
 };
 
 struct akinator_tree
