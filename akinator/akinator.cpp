@@ -66,6 +66,16 @@ void akinator_menu (akinator_tree* aktr)
 
         case 4:
         {
+            printf ("Вы выбрали режим сравнения слов."
+            "Пожалуйста введите 2 слова, которые хотите сравнить:\n");
+            akinator_mode_4 (aktr);
+
+            akinator_menu (aktr);
+            break;
+        }
+
+        case 5:
+        {
             printf ("Ты захотел выйти. Пока...\n");
             return;
         }
@@ -86,7 +96,8 @@ void print_hello ()
     "1) режим отгадывания\n"
     "2) просмотреть базу\n"
     "3) режим поиска свойств\n"
-    "4) выход\n");
+    "4) режим сравнения слов\n"
+    "5) выход\n");
 }
 
 //===================================================================================
@@ -339,17 +350,7 @@ void akinator_mode_3 (akinator_tree* aktr)
 {
     assert (aktr);
 
-    char* word = (char*) calloc (MAX_SYM, sizeof (char));
-    assert (word);
-
-    fgets (word, MAX_SYM, stdin);
-    char* pointer = strchr (word, '\n');
-    *pointer = '\0';
-
-    int len = pointer - word;
-
-    word = (char*) realloc (word, len * sizeof (char));
-    assert (word);
+    MAKE_WORD (word, len, end_ptr)
 
     tree_node* word_node = nullptr;
 
@@ -372,8 +373,6 @@ void akinator_mode_3 (akinator_tree* aktr)
 tree_node* tree_search (tree_node* cur_node, char* word)
 {
     assert (word);
-
-    printf ("Fisting = %s, second = %s\n", cur_node -> data, word);
     
     if (!strcmp (cur_node -> data, word))
     {
@@ -431,6 +430,123 @@ void make_property (char* word)
     {
         *pointer = '\0';
     }
+}
+
+//===================================================================================
+
+void akinator_mode_4 (akinator_tree* aktr)
+{
+    assert (aktr);
+
+    printf ("Первое слово: ");
+    MAKE_WORD (fir_wrd, fir_len, fir_end)
+
+    printf ("Второе слово: ");
+    MAKE_WORD (sec_wrd, sec_len, sec_end)    
+    printf ("\n");
+
+    tree_node* fir_node = tree_search (aktr -> root, fir_wrd);
+    tree_node* sec_node = tree_search (aktr -> root, sec_wrd);
+
+    if (fir_node == nullptr && sec_node == nullptr)
+    {
+        printf ("Я не знаю этих слов. Спасибо за игру, пока!\n");
+        return;
+    }
+    else if (fir_node == nullptr)
+    {
+        printf ("Я не знаю первого слова. Спасибо за игру, пока!\n");
+        return;
+    }
+    else if (sec_node == nullptr)
+    {
+        printf ("Я не знаю второго слова. Спасибо за игру, пока!\n");
+        return;
+    }
+        
+    calling_stack (fir_node, sec_node, fir_wrd, sec_wrd);
+
+    free (fir_wrd);
+    free (sec_wrd);
+}
+
+//===================================================================================
+
+void calling_stack (tree_node* fir_node, tree_node* sec_node, char* fir_wrd, char* sec_wrd)
+{
+    stack_constr (fir_stack, INIT_CAP);
+    stack_constr (sec_stack, INIT_CAP);
+
+    get_property_node_ptr (&fir_stack, fir_node);
+    get_property_node_ptr (&sec_stack, sec_node);
+
+    if (fir_stack.size == 0 || sec_stack.size == 0)
+        printf ("Какого-то из слова нет!\n");
+
+    search_common_properties (&fir_stack, &sec_stack, fir_wrd, sec_wrd);
+
+    stack_destruct (&fir_stack);
+    stack_destruct (&sec_stack);
+}
+
+//===================================================================================
+
+void get_property_node_ptr (Stack_t* stack, tree_node* cur_node)
+{
+    assert (stack);
+
+    stack_push (stack, (void*) cur_node);
+
+    while (cur_node -> prev_node != nullptr)
+    {
+        if (cur_node -> prev_node -> right == cur_node || cur_node -> prev_node -> left == cur_node)
+            stack_push (stack, (void*)cur_node -> prev_node);
+        else 
+            printf ("Error, %d\n", __LINE__);
+
+        cur_node = cur_node -> prev_node;
+    }
+}
+
+//===================================================================================
+
+void search_common_properties (Stack_t* fir_stack, Stack_t* sec_stack, char* fir_word, char* sec_word)
+{
+    stack_pop (fir_stack);      
+    stack_pop (sec_stack);  
+
+    tree_node* fir_node = (tree_node*) stack_pop (fir_stack);      
+    tree_node* sec_node = (tree_node*) stack_pop (sec_stack);
+    
+    printf ("Поиск схожих свойств для объектов %s и %s:\n", fir_word, sec_word);
+
+    while (fir_stack -> size + 1 && sec_stack -> size + 1)
+    {
+        if (fir_node == sec_node)
+        {  
+            if (fir_node -> prev_node -> left == fir_node)
+                printf ("\t-Не %s\n", fir_node -> prev_node -> data);
+            else 
+                printf ("\t-%s\n", fir_node -> prev_node -> data);
+        }
+        else if (fir_node -> prev_node -> left == fir_node)
+        {
+            printf ("\t-Есть отличие: %s %s, a %s не %s\n", sec_word, sec_node -> prev_node -> data, fir_word, fir_node -> prev_node -> data);    
+            break;
+        }
+        else if (fir_node -> prev_node -> right == fir_node)
+        {
+            printf ("\t-Есть отличие: %s %s, a %s не %s\n", fir_word, fir_node -> prev_node -> data, sec_word, sec_node -> prev_node -> data);    
+            break;
+        }
+        else    
+            printf ("\t\t\tError %d\n", __LINE__);
+
+        fir_node = (tree_node*) stack_pop (fir_stack); 
+        sec_node = (tree_node*) stack_pop (sec_stack);
+    }
+
+    printf ("\n");
 }
 
 //===================================================================================
