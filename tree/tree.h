@@ -16,7 +16,6 @@ struct tree_node
 
 struct akinator_tree
 {
-    int   game_mode;
     int   answer;
     text* base_info;
     tree_node* root;
