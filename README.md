@@ -6,7 +6,10 @@ Current version is for Linux in Russian.
 
 All you need to do to use the program:
 * To download and install [Graphviz for Linux](https://graphviz.org/download/).
-* To download current repository and launch `../../Akinator program/akinator.exe`.
+* To download current repository
+* Launch this repository:
+    cd Akinator 
+    make
 
 There are 4 regimes of the program:
 * To play game (where you can add your object to AG base).
