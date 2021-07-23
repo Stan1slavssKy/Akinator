@@ -1,14 +1,11 @@
 # Akinator
 
-Now you are in directory of fascinating game Akinator!
-Current version is for Windows NT in Russian.
-
-AG — Akinator Game.
+Current version is for Linux in Russian.
 
 ## Usage
 
-All you should do to download the program is:
-* To download and install [Graphviz for Windows](https://graphviz.org/download/#windows).
+All you need to do to use the program:
+* To download and install [Graphviz for Linux](https://graphviz.org/download/).
 * To download current repository and launch `../../Akinator program/akinator.exe`.
 
 There are 4 regimes of the program:
