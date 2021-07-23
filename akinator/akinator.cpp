@@ -26,78 +26,75 @@ void akinator_menu (akinator_tree* aktr)
 {
     assert (aktr);
     assert (aktr -> root);
+    
+    printf ("Привет, я Акинатор. Пожалуйста выбери режим игры:\n"); 
 
-    print_hello ();
+    int game_mode = 0;
 
-    aktr -> game_mode = handling_mod_input ();
-
-    int game_mode = aktr -> game_mode;
-
-    switch (game_mode)
+    while (game_mode != EXIT_MODE)
     {
-        case 1:
+        print_mode ();
+        game_mode = handling_mod_input ();
+        switch (game_mode)
         {
-            printf ("Вы выбрали режим отгадывания. Давайте начнем!\n");
-            akinator_mode_1 (aktr, aktr -> root);
-            
-            akinator_menu   (aktr);
-            break;
-        }
-            
-        case 2:
-        {
-            printf ("Ты выбрал просмотр базы. Так вот же она:\n");
-            const char string[] = "firefox GraphViz/base_dump.png";
-            system (string);
-            
-            akinator_menu (aktr);
-            break;
-        }
+            case GUESSING_MODE:
+            {
+                printf ("Вы выбрали режим отгадывания. Давайте начнем!\n");
+                guess_mode (aktr, aktr -> root);
+                
+                break;
+            }
+                
+            case BASE_MODE:
+            {
+                printf ("Ты выбрал просмотр базы. Так вот же она:\n");
+                system (BASE_OPEN);
+                
+                break;
+            }
 
-        case 3:
-        {
-            printf ("Вы выбрали режим поиск свойств.\n"
-            "Пожалуйста введите слово свойств которого вы хотите узнать.\n");
-            akinator_mode_3 (aktr);
+            case PROPERTIES_MODE:
+            {
+                printf ("Вы выбрали режим поиск свойств.\n"
+                "Пожалуйста введите слово свойств которого вы хотите узнать.\n");
+                properties_mode (aktr);
 
-            akinator_menu (aktr);
-            break;
-        }
+                break;
+            }
 
-        case 4:
-        {
-            printf ("Вы выбрали режим сравнения слов."
-            "Пожалуйста введите 2 слова, которые хотите сравнить:\n");
-            akinator_mode_4 (aktr);
+            case COMPARASION_MODE:
+            {
+                printf ("Вы выбрали режим сравнения слов."
+                "Пожалуйста введите 2 слова, которые хотите сравнить:\n");
+                comparison_mode (aktr);
 
-            akinator_menu (aktr);
-            break;
-        }
+                break;
+            }
 
-        case 5:
-        {
-            printf ("Ты захотел выйти. Пока...\n");
-            return;
-        }
+            case EXIT_MODE:
+            {
+                printf ("Ты захотел выйти. Пока...\n");
+                break;
+            }
 
-        default:
-        {
-            printf ("Прости, но я не знаю такого режима игры.\n");
-            break;
+            default:
+            {
+                printf ("Прости, но я не знаю такого режима игры.\n");
+                break;
+            }
         }
     }
 }
 
 //===================================================================================
 
-void print_hello ()
+void print_mode ()
 {
-    printf ("Привет, я Акинатор. Пожалуйста выбери режим игры:\n"
-    "1) режим отгадывания\n"
-    "2) просмотреть базу\n"
-    "3) режим поиска свойств\n"
-    "4) режим сравнения слов\n"
-    "5) выход\n");
+    printf ("1) режим отгадывания\n"
+            "2) просмотреть базу\n"
+            "3) режим поиска свойств\n"
+            "4) режим сравнения слов\n"
+            "5) выход\n");
 }
 
 //===================================================================================
@@ -126,7 +123,7 @@ int handling_mod_input ()
         }
         else
         {
-            printf ("Поожалуйста введите число, а не букву.\n");
+            printf ("Пожалуйста введите число, а не букву.\n");
             game_mode = -1;  
         }
     }
@@ -137,7 +134,7 @@ int handling_mod_input ()
 
 //===================================================================================
 
-void akinator_mode_1 (akinator_tree* aktr, tree_node* cur_node)
+void guess_mode (akinator_tree* aktr, tree_node* cur_node)
 {
     assert (aktr);
     
@@ -275,16 +272,8 @@ void make_new_nodes (tree_node* cur_node)
 
 void handling_training_input (tree_node* cur_node)
 {   
-    char* answ = (char*) calloc (MAX_SYM, sizeof (char));
-    assert (answ);
+    MAKE_WORD (answ, len, pointer)
 
-    fgets (answ, MAX_SYM, stdin);
-
-    char* pointer = strchr (answ, '\n');
-    *pointer = '\0';
-
-    int len = pointer - answ;
-    
     if (cur_node -> data == nullptr)
     {
         cur_node -> data = (char*) calloc (len, sizeof (char));
@@ -346,7 +335,7 @@ void create_node_base (tree_node* cur_node, FILE* base, int cur_recursion_depth)
 
 //===================================================================================
 
-void akinator_mode_3 (akinator_tree* aktr)
+void properties_mode (akinator_tree* aktr)
 {
     assert (aktr);
 
@@ -434,7 +423,7 @@ void make_property (char* word)
 
 //===================================================================================
 
-void akinator_mode_4 (akinator_tree* aktr)
+void comparison_mode (akinator_tree* aktr)
 {
     assert (aktr);
 
