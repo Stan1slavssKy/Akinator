@@ -25,4 +25,4 @@ Remember that to run the program some base should be exist, so write your initia
 
 ## Why I use graphviz?
 
-This program draws beautiful graphs that help with debugging the program. They are also very helpful for visualizing the game. For example, you can view the database, take 2 objects from there and play the object comparison mode. [Here is an example of an akinator database].(https://github.com/Stan1slavssKy/Akinator/blob/main/GraphViz/base_dump.png)
+This program draws beautiful graphs that help with debugging the program. They are also very helpful for visualizing the game. For example, you can view the database, take 2 objects from there and play the object comparison mode. [Here is an example of an akinator database.](https://github.com/Stan1slavssKy/Akinator/blob/main/GraphViz/base_dump.png)
